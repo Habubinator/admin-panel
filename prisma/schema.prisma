@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id                  String       @id @unique
+  username            String       @db.VarChar(255)
+  gamesave            String       @db.VarChar(511)
+  points              Int          @db.Integer
+  gems                Int          @db.Integer
+  lastOnline          Int          @db.Integer
+  dailyRewardStreak   Int          @default(0) @db.Integer
+  lastDailyRewardPick Int          @db.Integer
+  isOnboarded         Boolean      @db.Boolean
+  referals            Referals[]
+  tasksCompleted      TasksUsers[]
+  createdAt           DateTime     @default(now())
+}
+
+model Referals {
+  id         Int   @id @unique @default(autoincrement())
+  owner_id   String   @db.VarChar(64)
+  referal_id String   @db.VarChar(64)
+  owner      Users @relation(fields: [owner_id], references: [id])
+}
+
+model Tasks {
+  id             Int          @id @unique @default(autoincrement())
+  logo           String       @default("") @db.VarChar(255)
+  type           String       @default("") @db.VarChar(255)
+  task           String       @default("") @db.VarChar(255)
+  url            String       @default("") @db.VarChar(255)
+  channelId      String       @default("") @db.VarChar(255)
+  reward         Int          @db.Integer
+  rewardType     String       @default("coin") @db.VarChar(255)
+  usersCompleted TasksUsers[]
+  assignedAt     DateTime     @default(now())
+}
+
+model TasksUsers {
+  user_id     String   @db.VarChar(64)
+  user        Users    @relation(fields: [user_id], references: [id])
+  task_id     Int      @db.Integer
+  task        Tasks    @relation(fields: [task_id], references: [id])
+  task_status String   @default("") @db.VarChar(255)
+  assignedAt  DateTime @default(now())
+
+  @@id([user_id, task_id])
+}
+
+model Admins {
+  login      String   @id @unique @db.VarChar(64)
+  password   String   @db.VarChar(64)
+}

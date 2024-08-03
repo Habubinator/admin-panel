@@ -1,0 +1,17 @@
+{
+    "name": "admin-panel",
+    "version": "1.0.0",
+    "description": "admin-panel",
+    "main": "index.js",
+    "scripts": {},
+    "author": "Hudymenko Yevhenii",
+    "license": "MIT",
+    "dependencies": {
+        "@prisma/client": "^5.17.0",
+        "admin-panel": "file:",
+        "dotenv": "^16.4.5"
+    },
+    "devDependencies": {
+        "prisma": "^5.17.0"
+    }
+}
